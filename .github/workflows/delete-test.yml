@@ -1,16 +1,17 @@
-name: Delete test keys
-on:
-  schedule:
-    - cron: "0 1,6,11,16,21 * * *"
-  workflow_dispatch:
+import requests
 
-jobs:
-  delete:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install requests
-      - run: python delete_test.py
+URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
+ANON = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
+
+r = requests.post(
+    f"{URL}/rest/v1/rpc/delete_shinn_test_keys",
+    headers={
+        "apikey": ANON,
+        "Authorization": f"Bearer {ANON}",
+        "Content-Type": "application/json",
+    },
+    json={},
+    timeout=20,
+)
+print(r.status_code, r.text)
+r.raise_for_status()
