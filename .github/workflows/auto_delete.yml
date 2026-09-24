@@ -2,7 +2,7 @@ name: Auto Delete Test Keys
 
 on:
   schedule:
-    - cron: '0 * * * *'   # mỗi 1 giờ
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
 
       - run: pip install requests
 
-      - name: Delete expired test keys
+      - name: Run delete
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
