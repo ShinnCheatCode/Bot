@@ -16,5 +16,5 @@ jobs:
       - run: python bot.py
         env:
           SUPABASE_ANON_KEY: "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
-          TELEGRAM_BOT_TOKEN: ${{ secrets.8841904683:AAHA2XOEOD3JNRd6GSPz6F3TelNYj-lSuv8 }}
+          TELEGRAM_BOT_TOKEN: ${{ 8841904683:AAHA2XOEOD3JNRd6GSPz6F3TelNYj-lSuv8 }}
           GROUP_CHAT_ID: "-1004446959502"
