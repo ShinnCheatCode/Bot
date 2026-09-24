@@ -1,17 +1,16 @@
-create or replace function public.delete_shinn_test_keys()
-returns json
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare n int;
-begin
-  delete from public.keys
-  where key like 'Shinn-Cheat-Test%';
-  get diagnostics n = row_count;
-  return json_build_object('ok', true, 'deleted', n);
-end;
-$$;
+name: Delete test keys
+on:
+  schedule:
+    - cron: "0 1,6,11,16,21 * * *"
+  workflow_dispatch:
 
-grant execute on function public.delete_shinn_test_keys() to anon, authenticated;
-notify pgrst, 'reload schema';
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python delete_test.py
