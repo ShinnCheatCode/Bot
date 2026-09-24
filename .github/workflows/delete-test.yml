@@ -1,8 +1,7 @@
-import os
 import requests
 
 URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
-ANON = os.environ.get("SUPABASE_ANON_KEY") or "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
+ANON = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
 
 r = requests.post(
     f"{URL}/rest/v1/rpc/delete_shinn_test_keys",
