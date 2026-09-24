@@ -1,7 +1,7 @@
 name: Key drop
 on:
   schedule:
-    - cron: "0 */5 * * *"
+    - cron: "0 0,5,10,15 * * *"
   workflow_dispatch:
 
 jobs:
@@ -15,6 +15,6 @@ jobs:
       - run: pip install requests
       - run: python bot.py
         env:
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          GROUP_CHAT_ID: ${{ secrets.GROUP_CHAT_ID }}
+          SUPABASE_ANON_KEY: "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
+          TELEGRAM_BOT_TOKEN: ${{ secrets.8841904683:AAHA2XOEOD3JNRd6GSPz6F3TelNYj-lSuv8 }}
+          GROUP_CHAT_ID: "-1004446959502"
