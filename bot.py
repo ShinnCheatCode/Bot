@@ -1,0 +1,61 @@
+import time
+import requests
+
+SUPABASE_URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
+ANON = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
+BOT = "8841904683:AAHA2XOEOD3JNRd6GSPz6F3TelNYj-lSuv8"
+GROUP = "-1004446959502"
+
+def create_test_keys(count=5):
+    r = requests.post(
+        f"{SUPABASE_URL}/rest/v1/rpc/create_shinn_key",
+        headers={
+            "apikey": ANON,
+            "Authorization": f"Bearer {ANON}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "p_role": "member",
+            "p_days": 7,
+            "p_hours": 1,
+            "p_count": count,
+            "p_label": "group-free",
+        },
+        timeout=20,
+    )
+    r.raise_for_status()
+    raw = r.json()
+    if isinstance(raw, list):
+        return "\n".join(raw)
+    return str(raw).replace("\\n", "\n").strip('"')
+
+def send(text):
+    requests.post(
+        f"https://api.telegram.org/bot{BOT}/sendMessage",
+        json={"chat_id": GROUP, "text": text},
+        timeout=20,
+    ).raise_for_status()
+
+print("bot running…")
+while True:
+    try:
+        keys = create_test_keys(5)
+        send(
+            "SHINN CHEAT — Free test keys\n\n"
+            + keys
+            + "\n\n"
+            "VI\n"
+            "• 5 key / lần • hạn 1 giờ • 1 thiết bị\n"
+            "• Cập nhật mỗi 3 giờ\n"
+            "• Thêm thành viên để nhận key free\n"
+            "• Key dài hạn / tạo key: @ShinnThieuu\n\n"
+            "EN\n"
+            "• 5 keys per drop • 1 hour • 1 device\n"
+            "• Posted every 3 hours\n"
+            "• Add members to get free keys\n"
+            "• Long-term / create keys: @ShinnThieuu"
+        )
+        print("sent")
+    except Exception as e:
+        print("loi:", e)
+    time.sleep(3 * 60 * 60)
