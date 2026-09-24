@@ -2,24 +2,29 @@ import os
 import requests
 from datetime import datetime, timezone
 
-URL = os.getenv("SUPABASE_URL")
-KEY = os.getenv("SUPABASE_SERVICE_KEY")
+SUPABASE_URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
+SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 
-if not URL or not KEY:
-    raise Exception("Missing SUPABASE_URL or SUPABASE_SERVICE_KEY")
+if not SERVICE_ROLE_KEY:
+    raise Exception("Missing SUPABASE_SERVICE_KEY")
 
 headers = {
-    "apikey": KEY,
-    "Authorization": f"Bearer {KEY}",
+    "apikey": SERVICE_ROLE_KEY,
+    "Authorization": f"Bearer {SERVICE_ROLE_KEY}",
     "Content-Type": "application/json",
     "Prefer": "return=representation"
 }
 
+# Thời gian hiện tại UTC
 now = datetime.now(timezone.utc).isoformat()
 
-api = f"{URL}/rest/v1/keys?type=eq.test&expires_at=lt.{now}"
+# Chỉ xoá key test đã hết hạn
+api = (
+    f"{SUPABASE_URL}/rest/v1/keys"
+    f"?type=eq.test&expires_at=lt.{now}"
+)
 
 r = requests.delete(api, headers=headers)
 
-print(r.status_code)
-print(r.text)
+print("Status:", r.status_code)
+print("Response:", r.text)
