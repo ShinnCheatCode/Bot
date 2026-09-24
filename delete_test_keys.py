@@ -2,8 +2,11 @@ import os
 import requests
 from datetime import datetime, timezone
 
-URL = os.environ["SUPABASE_URL"]
-KEY = os.environ["SUPABASE_SERVICE_KEY"]
+URL = os.getenv("SUPABASE_URL")
+KEY = os.getenv("SUPABASE_SERVICE_KEY")
+
+if not URL or not KEY:
+    raise Exception("Missing SUPABASE_URL or SUPABASE_SERVICE_KEY")
 
 headers = {
     "apikey": KEY,
@@ -14,12 +17,9 @@ headers = {
 
 now = datetime.now(timezone.utc).isoformat()
 
-api = (
-    f"{URL}/rest/v1/keys"
-    f"?type=eq.test&expires_at=lt.{now}"
-)
+api = f"{URL}/rest/v1/keys?type=eq.test&expires_at=lt.{now}"
 
 r = requests.delete(api, headers=headers)
 
-print("Status:", r.status_code)
+print(r.status_code)
 print(r.text)
