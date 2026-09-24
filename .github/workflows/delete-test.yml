@@ -1,0 +1,18 @@
+name: Delete test keys
+on:
+  schedule:
+    - cron: "0 1,4,7,10,13,16,19,22 * * *"
+  workflow_dispatch:
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python delete_test.py
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
