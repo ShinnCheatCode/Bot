@@ -1,17 +1,17 @@
-import requests
+create or replace function public.delete_shinn_test_keys()
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare n int;
+begin
+  delete from public.keys
+  where key like 'Shinn-Cheat-Test%';
+  get diagnostics n = row_count;
+  return json_build_object('ok', true, 'deleted', n);
+end;
+$$;
 
-URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
-ANON = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
-
-r = requests.post(
-    f"{URL}/rest/v1/rpc/delete_shinn_test_keys",
-    headers={
-        "apikey": ANON,
-        "Authorization": f"Bearer {ANON}",
-        "Content-Type": "application/json",
-    },
-    json={},
-    timeout=20,
-)
-print(r.status_code, r.text)
-r.raise_for_status()
+grant execute on function public.delete_shinn_test_keys() to anon, authenticated;
+notify pgrst, 'reload schema';
