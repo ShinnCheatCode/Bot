@@ -4,9 +4,9 @@ from zoneinfo import ZoneInfo
 import requests
 
 SUPABASE_URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
-ANON = os.environ.get("SUPABASE_ANON_KEY") or "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
+ANON = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
 BOT = os.environ["8841904683:AAHA2XOEOD3JNRd6GSPz6F3TelNYj-lSuv8"]
-GROUP = os.environ.get("GROUP_CHAT_ID") or "-1004446959502"
+GROUP = "-1004446959502"
 TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 
 def create_test_keys(count=5):
@@ -42,7 +42,7 @@ def send(text):
 hour = datetime.now(TZ).hour
 footer = (
     "\n\nĐây là key cuối cùng của ngày, nhớ ủng hộ Admin nhé @ShinnThieuu"
-    if hour >= 21
+    if hour == 22
     else ""
 )
 
