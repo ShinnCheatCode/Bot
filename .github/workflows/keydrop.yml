@@ -1,4 +1,5 @@
-name: Key drop
+name: SHINN TEST KEYS
+
 on:
   schedule:
     - cron: "0 0,5,10,15 * * *"
@@ -7,13 +8,16 @@ on:
 jobs:
   send:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - run: pip install requests
+
       - run: python bot.py
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.8841904683:AAFDQmAuhcoWv26p_5TC_tQV9zhdaXbNoCk }}
-          GROUP_CHAT_ID: "-1004446959502"
+          BOT_TOKEN: ${{ secrets.8841904683:AAFDQmAuhcoWv26p_5TC_tQV9zhdaXbNoCk }}
