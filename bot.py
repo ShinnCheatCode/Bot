@@ -1,13 +1,23 @@
-import os
-from datetime import datetime
-from zoneinfo import ZoneInfo
+import time
 import requests
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 SUPABASE_URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
 ANON = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
-BOT = os.environ["8841904683:AAHA2XOEOD3JNRd6GSPz6F3TelNYj-lSuv8"]
+BOT = "DÁN_TOKEN_BOT"
 GROUP = "-1004446959502"
 TZ = ZoneInfo("Asia/Ho_Chi_Minh")
+
+def in_window():
+    return 7 <= datetime.now(TZ).hour < 24
+
+def wait_7am():
+    now = datetime.now(TZ)
+    target = now.replace(hour=7, minute=0, second=0, microsecond=0)
+    if now >= target:
+        target += timedelta(days=1)
+    return max(60, int((target - now).total_seconds()))
 
 def create_test_keys(count=5):
     r = requests.post(
@@ -26,6 +36,7 @@ def create_test_keys(count=5):
         },
         timeout=20,
     )
+    print("create", r.status_code, r.text[:200])
     r.raise_for_status()
     raw = r.json()
     if isinstance(raw, list):
@@ -33,34 +44,44 @@ def create_test_keys(count=5):
     return str(raw).replace("\\n", "\n").strip('"')
 
 def send(text):
-    requests.post(
+    r = requests.post(
         f"https://api.telegram.org/bot{BOT}/sendMessage",
         json={"chat_id": GROUP, "text": text},
         timeout=20,
-    ).raise_for_status()
+    )
+    print("telegram", r.status_code, r.text[:200])
+    r.raise_for_status()
 
-hour = datetime.now(TZ).hour
-footer = (
-    "\n\nĐây là key cuối cùng của ngày, nhớ ủng hộ Admin nhé @ShinnThieuu"
-    if hour == 22
-    else ""
-)
-
-keys = create_test_keys(5)
-send(
-    "SHINN CHEAT — Free test keys\n\n"
-    + keys
-    + "\n\n"
-    "VI\n"
-    "• 5 key / lần • hạn 1 giờ • 1 thiết bị\n"
-    "• 7h sáng – 12h đêm, mỗi 5 giờ\n"
-    "• Thêm thành viên để nhận key free\n"
-    "• Key dài hạn / tạo key: @ShinnThieuu\n\n"
-    "EN\n"
-    "• 5 keys per drop • 1 hour • 1 device\n"
-    "• 7:00–24:00, every 5 hours\n"
-    "• Add members to get free keys\n"
-    "• Long-term / create keys: @ShinnThieuu"
-    + footer
-)
-print("sent", hour)
+print("key drop only")
+while True:
+    try:
+        if not in_window():
+            w = wait_7am()
+            print("ngoai gio, cho", w)
+            time.sleep(w)
+            continue
+        hour = datetime.now(TZ).hour
+        footer = (
+            "\n\nĐây là key cuối cùng của ngày, nhớ ủng hộ Admin nhé @ShinnThieuu"
+            if hour == 22
+            else ""
+        )
+        keys = create_test_keys(5)
+        send(
+            "SHINN CHEAT — Free test keys\n\n"
+            + keys
+            + "\n\n"
+            "VI\n"
+            "• 5 key / lần • hạn 1 giờ • 1 thiết bị\n"
+            "• 7h–24h, mỗi 5 giờ\n"
+            "• Key dài hạn: @ShinnThieuu\n\n"
+            "EN\n"
+            "• 5 keys • 1 hour • 1 device\n"
+            "• 7:00–24:00 every 5 hours\n"
+            "• Long-term: @ShinnThieuu"
+            + footer
+        )
+        print("sent", hour)
+    except Exception as e:
+        print("loi:", e)
+    time.sleep(5 * 60 * 60)
