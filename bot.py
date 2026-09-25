@@ -17,7 +17,7 @@ SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 # ============================================================
 # Thêm BOT_TOKEN vào:
 # GitHub -> Settings -> Secrets and variables -> Actions
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = os.getenv("8841904683:AAFDQmAuhcoWv26p_5TC_tQV9zhdaXbNoCk")
 # ID nhóm Telegram
 GROUP_CHAT_ID = "-1004446959502"
 # ============================================================
