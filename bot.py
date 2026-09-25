@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 SUPABASE_URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
 ANON = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
-BOT = "DÁN_TOKEN_BOT"
+BOT = "8841904683:AAFDQmAuhcoWv26p_5TC_tQV9zhdaXbNoCk"
 GROUP = "-1004446959502"
 TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 
