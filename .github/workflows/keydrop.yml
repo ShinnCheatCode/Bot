@@ -2,10 +2,7 @@ name: SHINN TEST KEYS
 
 on:
   schedule:
-    # 07:00, 12:00, 17:00, 22:00 giờ Việt Nam
-    # GitHub Actions dùng UTC
     - cron: "0 0,5,10,15 * * *"
-
   workflow_dispatch:
 
 permissions:
