@@ -4,71 +4,83 @@ from zoneinfo import ZoneInfo
 import requests
 
 SUPABASE_URL = "https://efhqbzdnrtifqjqlqseb.supabase.co"
-ANON = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
-BOT = os.environ["8841904683:AAFDQmAuhcoWv26p_5TC_tQV9zhdaXbNoCk"]
-GROUP = os.environ.get("GROUP_CHAT_ID", "-1004446959502")
+ANON_KEY = "sb_publishable_jnycTCgXRMrluvwJORd_4g_B7ojwi9R"
+
+BOT_TOKEN = os.environ["8841904683:AAFDQmAuhcoWv26p_5TC_tQV9zhdaXbNoCk"]
+GROUP_CHAT_ID = "-1004446959502"
+
 TZ = ZoneInfo("Asia/Ho_Chi_Minh")
+DROP_HOURS = [7, 12, 17, 22]
+
+LABEL = "FeedBack @ShinnThieuu"
 
 
-def create_test_keys(count=5):
+def create_keys():
     r = requests.post(
         f"{SUPABASE_URL}/rest/v1/rpc/create_shinn_key",
         headers={
-            "apikey": ANON,
-            "Authorization": f"Bearer {ANON}",
+            "apikey": ANON_KEY,
+            "Authorization": f"Bearer {ANON_KEY}",
             "Content-Type": "application/json",
         },
         json={
-            "p_role": "member",
-            "p_days": 7,
+            "p_role": "Member",
+            "p_count": 5,
             "p_hours": 1,
-            "p_count": count,
-            "p_label": "FeedBack@ShinnThieuu",
+            "p_label": LABEL
         },
         timeout=30,
     )
-    print("create", r.status_code, r.text[:300])
+
     r.raise_for_status()
-    raw = r.json()
-    if isinstance(raw, list):
-        return "\n".join(str(x) for x in raw)
-    return str(raw).replace("\\n", "\n").strip().strip('"')
+    data = r.json()
+
+    if isinstance(data, list):
+        return "\n".join(f"`{k}`" for k in data)
+
+    return f"`{str(data).replace(chr(34), '')}`"
 
 
-def send(text):
-    r = requests.post(
-        f"https://api.telegram.org/bot{BOT}/sendMessage",
-        json={"chat_id": GROUP, "text": text, "disable_web_page_preview": True},
+def send(msg):
+    requests.post(
+        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+        json={
+            "chat_id": GROUP_CHAT_ID,
+            "text": msg,
+            "parse_mode": "Markdown",
+            "disable_web_page_preview": True
+        },
         timeout=30,
-    )
-    print("telegram", r.status_code, r.text[:300])
-    r.raise_for_status()
+    ).raise_for_status()
 
 
-hour = datetime.now(TZ).hour
-if hour < 7:
-    print("outside window", hour)
-    raise SystemExit(0)
+def main():
+    now = datetime.now(TZ)
 
-footer = ""
-if hour == 22:
-    footer = "\n\nĐây là key cuối cùng của ngày, nhớ ủng hộ Admin nhé @ShinnThieuu"
+    if now.hour not in DROP_HOURS or now.minute != 0:
+        return
 
-keys = create_test_keys(5)
-send(
-    "SHINN CHEAT — Free test keys\n\n"
-    + keys
-    + "\n\n"
-    "VI\n"
-    "• 5 key / lần • hạn 1 giờ • 1 thiết bị\n"
-    "• 7h sáng – 12h đêm, mỗi 5 giờ\n"
-    "• Thêm thành viên để nhận key free\n"
-    "• Key dài hạn / tạo key: @ShinnThieuu\n\n"
-    "EN\n"
-    "• 5 keys per drop • 1 hour • 1 device\n"
-    "• 7:00–24:00, every 5 hours\n"
-    "• Add members to get free keys\n"
-    "• Long-term / create keys: @ShinnThieuu"
-    + footer
-)
-print("sent", hour)
+    keys = create_keys()
+
+    text = f"""🎁 *SHINN CHEAT TEST KEYS*
+
+{keys}
+
+🇻🇳 **KEY TEST**
+• 5 key miễn phí
+• Hiệu lực: 1 giờ
+• 1 thiết bị / key
+• Owner: FeedBack @ShinnThieuu
+
+🇺🇸 **TEST KEYS**
+• 5 free keys
+• Valid for 1 hour
+• 1 device per key
+• Owner: FeedBack @ShinnThieuu
+"""
+
+    send(text)
+
+
+if __name__ == "__main__":
+    main()
